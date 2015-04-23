@@ -7,7 +7,7 @@ from PIL import Image
 from cStringIO import StringIO
 
 
-class pilLike(object):
+class ImagePO(object):
     _instance = None
 
     def __init__(self):
@@ -20,6 +20,10 @@ class pilLike(object):
     @property
     def shape(self):
         return self._instance.shape
+
+    @property
+    def get_instance(self):
+        return self._instance
 
     def new(self, size, channels, depth):
         self._instance = np.zeros(size + (channels,), depth)
@@ -60,30 +64,42 @@ class pilLike(object):
         self._instance = cv2.cvtColor(self._instance, flag)
         return self._instance
 
-    #TODO: write this
-    def save(self, format, file = _instance):
-        cv2.imwrite(format, file)
-
+    #TODO: rewrite!
+    def save(self, format, fl = None):
+        if fl == None:
+            cv2.imwrite(format, self._instance)
+            return None
+        cv2.imwrite(format, fl)
+        return None
 
     def show(self):
         cv2.imshow('ImageWindow',self._instance)
         cv2.waitKey()
 
 
+class ImageDraw(object):
+    _img_instance = None
+
+    def __init__(self, img):
+        self._img_instance = img
 
 
-a = pilLike()
+
+
+
+a = ImagePO()
+
 
 pil_image = Image.open('1.jpg')
 
 with open('1.jpg', 'rb') as img:
     b = a.open(img)
-    a.save('test.jpg', img)
 
 
 a.open(pil_image)
-a.convert(cv2.COLOR_RGB2GRAY)
-
+d = ImageDraw(a.get_instance)
+b = a.copy()
+d.point([(10,10),(100,200)], (255,255,0), 5)
 a.show()
 
 
