@@ -29,7 +29,10 @@ class pilLike(object):
             if self._mode == 'RGB':
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             self._instance = image
+        return self._instance
 
+    def crop(self, x1,y1,x2,y2):
+        self._instance = self._instance[y1:y2, x1:x2]
         return self._instance
 
 
@@ -48,6 +51,8 @@ with open('1.jpg', 'rb') as img:
 
 pil_image = Image.open('1.jpg')
 a.open(pil_image)
+
+a.crop(0,300,300,200)
 
 a.show()
 
