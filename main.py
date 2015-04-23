@@ -87,6 +87,10 @@ class ImageDraw(object):
         for elem in xy:
             cv2.line(self._img_instance,elem, elem, fill,width)
 
+    def line(self, xy, color, width):
+        cv2.line(self._img_instance,xy[0], xy[1], color, width)
+
+
 
 
 a = ImagePO()
