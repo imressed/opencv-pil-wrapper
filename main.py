@@ -90,7 +90,8 @@ class ImageDraw(object):
     def line(self, xy, color, width):
         cv2.line(self._img_instance,xy[0], xy[1], color, width)
 
-
+    def rectangle(self, xy, fill, outline):
+        cv2.rectangle(self._img_instance,xy[0], xy[1], fill, outline)
 
 
 a = ImagePO()
@@ -105,7 +106,7 @@ with open('1.jpg', 'rb') as img:
 a.open(pil_image)
 d = ImageDraw(a.get_instance)
 b = a.copy()
-d.point([(10,10),(100,200)], (255,255,0), 5)
+d.rectangle([(10,10),(100,200)], (255,255,0), 5)
 a.show()
 
 
