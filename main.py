@@ -83,7 +83,9 @@ class ImageDraw(object):
     def __init__(self, img):
         self._img_instance = img
 
-
+    def point(self, xy, fill, width=3):
+        for elem in xy:
+            cv2.line(self._img_instance,elem, elem, fill,width)
 
 
 
