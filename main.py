@@ -149,11 +149,15 @@ class Image(object):
         return self._instance
 
     #TODO: rewrite!
-    def save(self, format, fl = None):
-        if fl == None:
-            cv2.imwrite(format, self._instance)
+    def save(self, fp, format=None):
+        if isinstance(fp,basestring):
+            cv2.imwrite(fp, self._instance)
             return None
-        cv2.imwrite(format, fl)
+        if isinstance(fp,file):
+            fl = open(format, 'w')
+            fl.write(fp.read())
+            fl.close()
+            return None
         return None
 
     def show(self):
@@ -194,6 +198,7 @@ print(a.mode)
 pil_image = PILImage.open('1.jpg')
 
 with open('1.jpg', 'rb') as img:
+    #a.save(img, 'text.jpg')
     b = a.open(img)
 
 a.open(pil_image)
@@ -204,7 +209,7 @@ d = ImageDraw(a.get_instance)
 b = a.copy()
 d.rectangle([(10,10),(100,200)], fill=(255,255,0))
 
-
+a.save('a.jpg')
 
 a.show()
 
