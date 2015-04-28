@@ -3,11 +3,11 @@ __author__ = 'imressed'
 
 import cv2
 import numpy as np
-from PIL import Image
+from PIL import Image as PILImage
 from cStringIO import StringIO
 
 
-class ImagePO(object):
+class Image(object):
     _instance = None
 
     def __init__(self):
@@ -25,11 +25,40 @@ class ImagePO(object):
     def get_instance(self):
         return self._instance
 
-    def new(self, size, channels, depth):
+    def _get_channels_and_depth(self, mode):
+        mode = str(mode).upper()
+        if mode == '1':
+            return 1 , np.bool
+        if mode == 'L':
+            return 1, np.uint8
+        if mode == 'P':
+            return 1, np.uint8
+        if mode == 'RGB':
+            return 3, np.uint8
+        if mode == 'RGBA':
+            return 4, np.uint8
+        if mode == 'CMYK':
+            return 4, np.uint8
+        if mode == 'YCBCR':
+            return 3, np.uint8
+        if mode == 'LAB':
+            return 3, np.uint8
+        if mode == 'HSV':
+            return 3, np.uint8
+        if mode == 'I':
+            return 1, np.int32
+        if mode == 'F':
+            return 1, np.float32
+
+        raise ValueError('Your mode name is incorect.')
+
+    def new(self, mode, size, color=(0,0,0)):
+        channels, depth = self._get_channels_and_depth(mode)
         self._instance = np.zeros(size + (channels,), depth)
+        self._instance[:,0:] = color
         return self._instance
 
-    def open(self, fl):
+    def open(self, fl, mode='r'):
         if isinstance(fl, basestring):
             self._instance = cv2.imread(fl,cv2.IMREAD_UNCHANGED)
             return self._instance
@@ -45,8 +74,9 @@ class ImagePO(object):
             self._instance = image
             return self._instance
 
-    def crop(self, x1,y1,x2,y2):
-        self._instance = self._instance[y1:y2, x1:x2]
+    def crop(self, box):
+        """box is a tuple = left, upper, right, lower"""
+        self._instance = self._instance[box[1]:box[3], box[0]:box[2]]
         return self._instance
 
     def copy(self):
@@ -94,19 +124,27 @@ class ImageDraw(object):
         cv2.rectangle(self._img_instance,xy[0], xy[1], fill, outline)
 
 
-a = ImagePO()
 
 
-pil_image = Image.open('1.jpg')
+a = Image()
+
+#a.new('rgb',(300,300),(0,255,0))
+
+
+pil_image = PILImage.open('1.jpg')
 
 with open('1.jpg', 'rb') as img:
     b = a.open(img)
+
 
 
 a.open(pil_image)
 d = ImageDraw(a.get_instance)
 b = a.copy()
 d.rectangle([(10,10),(100,200)], (255,255,0), 5)
+
+
+
 a.show()
 
 
